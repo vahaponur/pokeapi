@@ -5,8 +5,6 @@ import (
 	"io"
 	"log"
 	"net/http"
-
-	pokecache "internal.com/pokecache"
 )
 
 type LocationArea struct {
@@ -19,7 +17,7 @@ type LocationArea struct {
 	} `json:"results"`
 }
 
-var cache pokecache.Cache = *pokecache.NewCache(5)
+var cache *Cache = NewCache(5)
 
 func GetLocationArea(link string) LocationArea {
 	val, ok := cache.Get(link)
