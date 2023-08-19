@@ -2,10 +2,11 @@ package pokeapi
 
 import (
 	"encoding/json"
-	pokecache "internal/pokecache"
 	"io"
 	"log"
 	"net/http"
+
+	pokecache "internal.com/pokecache"
 )
 
 type LocationArea struct {
