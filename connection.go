@@ -2,6 +2,7 @@ package pokeapi
 
 import (
 	"encoding/json"
+	pokecache "internal/pokecache"
 	"io"
 	"log"
 	"net/http"
@@ -17,7 +18,18 @@ type LocationArea struct {
 	} `json:"results"`
 }
 
+var cache pokecache.Cache = *pokecache.NewCache(5)
+
 func GetLocationArea(link string) LocationArea {
+	val, ok := cache.Get(link)
+	if ok {
+		locArea := LocationArea{}
+		err := json.Unmarshal(val, &locArea)
+		if err != nil {
+			log.Fatal(err)
+		}
+		return locArea
+	}
 	res, err := http.Get(link)
 
 	if err != nil {
@@ -37,6 +49,7 @@ func GetLocationArea(link string) LocationArea {
 	if err != nil {
 		log.Fatal(err)
 	}
+	cache.Add(link, body)
 
 	return locArea
 }

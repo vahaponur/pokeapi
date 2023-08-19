@@ -17,8 +17,6 @@ type Cache struct {
 
 func NewCache(duration time.Duration) *Cache {
 	cache := Cache{entiries: make(map[string]cacheEntry)}
-	defer cache.mu.RUnlock()
-	cache.mu.RLock()
 
 	go readLoop(&cache, duration)
 
@@ -44,13 +42,17 @@ func readLoop(cache *Cache, duration time.Duration) {
 
 }
 func (c *Cache) Add(key string, val []byte) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
 	cacheEntry := cacheEntry{createdAt: time.Now(), val: val}
 	c.entiries[key] = cacheEntry
 }
-func (c *Cache) Get(key string) (cacheEntry, bool) {
-	val, ok := c.entiries[key]
+func (c *Cache) Get(key string) ([]byte, bool) {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+	ce, ok := c.entiries[key]
 	if !ok {
-		return cacheEntry{}, false
+		return nil, false
 	}
-	return val, true
+	return ce.val, true
 }
