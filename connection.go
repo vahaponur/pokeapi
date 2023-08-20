@@ -2,7 +2,6 @@ package pokeapi
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -110,7 +109,7 @@ const DEFAULT_LOC_AREA string = "https://pokeapi.co/api/v2/location-area/"
 
 func GetPokemonsFromLocArea(areaName string) AreaDetails {
 	val, ok := cache.Get(DEFAULT_LOC_AREA + areaName)
-	fmt.Println(DEFAULT_LOC_AREA + areaName)
+
 	if ok {
 		areaDetails := AreaDetails{}
 		err := json.Unmarshal(val, &areaDetails)
