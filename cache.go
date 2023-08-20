@@ -24,13 +24,13 @@ func NewCache(duration time.Duration) *Cache {
 	return &cache
 }
 func readLoop(cache *Cache, duration time.Duration) {
-	ticker := time.NewTicker(duration * time.Second)
+	ticker := time.NewTicker(time.Duration(duration.Seconds()))
 	for range ticker.C {
 		newEntries := map[string]cacheEntry{}
 
 		for key, entry := range cache.entiries {
 			dif := time.Now().Sub(entry.createdAt)
-			if dif > duration {
+			if time.Duration(dif.Seconds()) > time.Duration(duration.Seconds()) {
 				fmt.Println("Entry passed")
 				continue
 			}
