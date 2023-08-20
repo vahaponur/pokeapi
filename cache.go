@@ -1,7 +1,6 @@
 package pokeapi
 
 import (
-	"fmt"
 	"sync"
 	"time"
 )
@@ -31,10 +30,10 @@ func readLoop(cache *Cache, duration int32) {
 		for key, entry := range cache.entiries {
 			dif := time.Now().Sub(entry.createdAt)
 			if dif > time.Second*time.Duration(duration) {
-				fmt.Println("Entry passed")
+
 				continue
 			}
-			fmt.Print("Entry not passed")
+
 			newEntries[key] = entry
 
 		}
