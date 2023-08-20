@@ -16,21 +16,21 @@ type Cache struct {
 	mu       sync.RWMutex
 }
 
-func NewCache(duration time.Duration) *Cache {
+func NewCache(duration int32) *Cache {
 	cache := Cache{entiries: make(map[string]cacheEntry)}
 
 	go readLoop(&cache, duration)
 
 	return &cache
 }
-func readLoop(cache *Cache, duration time.Duration) {
-	ticker := time.NewTicker(time.Duration(duration.Seconds()))
+func readLoop(cache *Cache, duration int32) {
+	ticker := time.NewTicker(time.Second * time.Duration(duration))
 	for range ticker.C {
 		newEntries := map[string]cacheEntry{}
 
 		for key, entry := range cache.entiries {
 			dif := time.Now().Sub(entry.createdAt)
-			if time.Duration(dif.Seconds()) > time.Duration(duration.Seconds()) {
+			if dif > time.Second*time.Duration(duration) {
 				fmt.Println("Entry passed")
 				continue
 			}
